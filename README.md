@@ -14,9 +14,9 @@ A fully functional two-player Chess game built in **C++** using **SFML** for gra
 
 | Name | Roll Number | Role |
 |------|-------------|------|
-| Rana Riasat Ali Khan | 25F-0642 | Lead Developer |
-| Sameen Khasif | 25F-0633 | UI / Board Logic |
-| Muhammad Bilal | 25F-0673 | Audio & Special Moves |
+| Rana Riasat Ali Khan | 25F-0642 | Lead Developer + SFML Integrator|
+| Sameen Khasif | 25F-0633 | Board Logic Implementor |
+| Muhammad Bilal | 25F-0673 | Game Design Developer |
 
 **University:** FAST-NUCES, CFD Campus  
 **Section:** 2C
