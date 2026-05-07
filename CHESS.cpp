@@ -533,7 +533,7 @@ bool Board::movePiece(int fromRow, int fromCol, int toRow, int toCol)
 	bool isEnPassant = (dynamic_cast<Pawn*>(piece) && toCol != fromCol && grid[toRow][toCol] == nullptr);
 
 	// Capture flag set karo (sound ke liye)
-
+lastMoveWasCapture = (grid[toRow][toCol] != nullptr) || isEnPassant;
 
 	// Move execute karo
 	pieces* captured = grid[toRow][toCol];
