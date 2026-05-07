@@ -280,7 +280,33 @@ bool Queen::isValidMove(int toRow, int toCol, pieces* board[8][8],
 	int fromCol = cols;
 	int rD = abs(toRow - fromRow);
 	int cD = abs(toCol - fromCol);
+if (toRow == fromRow || toCol == fromCol)
+{
+	if (toRow == fromRow)
+	{
+		int step = (toCol > fromCol) ? 1 : -1;
 
+		for (int j = fromCol + step; j != toCol; j += step)
+		{
+			if (board[fromRow][j]) 
+			{
+				return false; 
+			}
+		}
+	}
+	else
+	{
+		int step = (toRow > fromRow) ? 1 : -1;
+
+		for (int i = fromRow + step; i != toRow; i += step)
+		{
+			if (board[i][fromCol])
+			{
+				return false;
+			}
+		}
+	}
+}
 
 	// Bishop jaisi movement (diagonal)
 	else if (rD == cD)
