@@ -321,6 +321,15 @@ string King::getSymbol()
 	return (colour == "W") ? "K" : "k";
 }
 
+void King::setHasMoved() 
+{
+	hasMoved = true; 
+}
+bool King::getHasMoved() const
+{
+	return hasMoved; 
+}
+
 
 bool King::isValidMove(int toRow, int toCol, pieces* board[8][8],
 	int lastDRow, int lastDCol)
