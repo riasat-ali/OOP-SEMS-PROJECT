@@ -402,7 +402,22 @@ Board::~Board()
 	}
 }
 
-
+pieces* Board::getGrid(int r, int c) const
+{
+	return grid[r][c];
+}
+string Board::getCurrentPlayer() const
+{
+	return currentPlayer;
+}
+int Board::getMoveCount() const
+{
+	return moveCount;
+}
+bool Board::wasCapture() const
+{
+	return lastMoveWasCapture;
+}
 
 // ── Setup ────────────────────────────────────────────────────
 
