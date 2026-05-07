@@ -506,7 +506,31 @@ bool Board::tryMoveAndCheck(pieces* piece, int fromRow, int fromCol, int toRow, 
 
 // ── Move karo ────────────────────────────────────────────────
 
+bool Board::movePiece(int fromRow, int fromCol, int toRow, int toCol)
+{
+	if (!grid[fromRow][fromCol])
+	{
+		return false;
+	}
 
+	pieces* piece = grid[fromRow][fromCol];
+
+	if (piece->getColour() != currentPlayer)
+	{
+		return false;
+	}
+
+	if (!piece->isValidMove(toRow, toCol, grid, lastDoubleRow, lastDoubleCol))
+	{
+		return false;
+	}
+
+	if (!tryMoveAndCheck(piece, fromRow, fromCol, toRow, toCol))
+	{
+		return false;
+	}
+
+	bool isEnPassant = (dynamic_cast<Pawn*>(piece) && toCol != fromCol && grid[toRow][toCol] == nullptr);
 
 	// Capture flag set karo (sound ke liye)
 
