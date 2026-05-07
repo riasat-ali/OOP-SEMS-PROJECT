@@ -556,7 +556,17 @@ lastMoveWasCapture = (grid[toRow][toCol] != nullptr) || isEnPassant;
 
 	// En passant tracker update karo
 
-
+	if (dynamic_cast<Pawn*>(piece) && abs(toRow - fromRow) == 2)
+	{
+		lastDoubleRow = toRow;
+		lastDoubleCol = toCol;
+	}
+	else
+	{
+		lastDoubleRow = -1;
+		lastDoubleCol = -1;
+	}
+	
 	// Pawn promotion (auto queen)
 	if (dynamic_cast<Pawn*>(piece))
 	{
