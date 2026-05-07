@@ -583,7 +583,16 @@ lastMoveWasCapture = (grid[toRow][toCol] != nullptr) || isEnPassant;
 	}
 
 }
+ //hasMoved Flags Updated
+	if (auto* rook = dynamic_cast<Rook*>(grid[toRow][toCol]))
+	{
+		rook->setHasMoved();
+	}
 
+	if (auto* king = dynamic_cast<King*>(grid[toRow][toCol]))
+	{
+		king->setHasMoved();
+	}
 // ── Player switch ─────────────────────────────────────────────
 
 void Board::switchPlayer()
