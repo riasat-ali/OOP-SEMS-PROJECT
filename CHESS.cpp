@@ -55,6 +55,29 @@ void SoundManager::playCastle() { if (castleSound) { castleSound->play(); } }
 // BASE CLASS — pieces
 // ═══════════════════════════════════════════════════════════════════
 
+pieces::pieces() : colour(" "), rows(0), cols(0) {}
+
+pieces::pieces(string colour, int rows, int cols) : colour(colour), rows(rows), cols(cols) {}
+
+string pieces::getColour() const 
+{
+	return colour; 
+}
+int pieces::getRow() const 
+{
+	return rows; 
+}
+int pieces::getCol() const 
+{
+	return cols; 
+}
+
+void pieces::setPosition(int r, int c)
+{
+	rows = r;
+	cols = c;
+}
+
 
 // ═══════════════════════════════════════════════════════════════════
 // PAWN
