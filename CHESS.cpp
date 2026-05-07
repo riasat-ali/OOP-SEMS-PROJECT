@@ -593,6 +593,9 @@ lastMoveWasCapture = (grid[toRow][toCol] != nullptr) || isEnPassant;
 	{
 		king->setHasMoved();
 	}
+moveCount++;
+return true;
+}
 // ── Player switch ─────────────────────────────────────────────
 
 void Board::switchPlayer()
