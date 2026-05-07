@@ -714,7 +714,24 @@ bool Board::castling(string colour, string side)
 
 // ── King position dhundo ─────────────────────────────────────
 
+void Board::getKingPosition(string colour, int& kr, int& kc)
+{
+	kr = -1;
+	kc = -1;
 
+	for (int i = 0; i < 8; i++)
+	{
+		for (int j = 0; j < 8; j++)
+		{
+			if (grid[i][j] && grid[i][j]->getColour() == colour && dynamic_cast<King*>(grid[i][j]))
+			{
+				kr = i;
+				kc = j;
+				return;
+			}
+		}
+	}
+}
 
 // ═══════════════════════════════════════════════════════════════════
 // DRAW — SIDE PANEL
