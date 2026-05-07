@@ -119,7 +119,22 @@ bool Pawn::isValidMove(int toRow, int toCol, pieces* board[8][8],
 	}
 
 	// Diagonal capture
-
+if (toRow == fromRow + dir && abs(toCol - fromCol) == 1)
+{
+	if (board[toRow][toCol] && board[toRow][toCol]->getColour() == enemy)
+	{
+		return true;
+	}
+	if (lastDRow == fromRow && lastDCol == toCol)
+	{
+		if (board[fromRow][toCol] != nullptr &&
+			dynamic_cast<Pawn*>(board[fromRow][toCol]) &&
+			board[fromRow][toCol]->getColour() == enemy)
+		{
+			return true;
+		}
+	}
+}
 	return false;
 }
 
