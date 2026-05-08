@@ -4,60 +4,41 @@ int main()
 {
 	sf::RenderWindow window(sf::VideoMode(sf::Vector2u(980, 700)), "Chess Game");
 	window.setFramerateLimit(60);
-
-
 	sf::Font font;
-
-	if (!font.openFromFile("C:/Windows/Fonts/arial.ttf"))
+	if (!font.openFromFile("fonts/arial.ttf"))
 	{
 		cout << "ERROR: Font not found!" << endl;
 		return -1;
 	}
 
 	// ── Board texture ────────────────────────────────────────────
-
 	sf::Texture boardTexture;
-
 	if (!boardTexture.loadFromFile("board.png"))
 	{
 		cout << "ERROR: board.png not found!" << endl;
 		return -1;
 	}
-
 	sf::Sprite boardSprite(boardTexture);
 	sf::Vector2u boardSize = boardTexture.getSize();
-	boardSprite.setScale(sf::Vector2f((float)(TILE * 8) / boardSize.x,
-		(float)(TILE * 8) / boardSize.y));
+	boardSprite.setScale(sf::Vector2f((float)(TILE * 8) / boardSize.x,(float)(TILE * 8) / boardSize.y));
 	boardSprite.setPosition(sf::Vector2f(OFFSET, OFFSET));
 
 	// ── Piece textures ───────────────────────────────────────────
-
-	const string names[12] = {
-	"white-pawn","white-rook","white-knight","white-bishop","white-queen","white-king",
-	"black-pawn","black-rook","black-knight","black-bishop","black-queen","black-king"
-	};
-
-	map<string, sf::Texture> textures;
-
-	for (const auto& name : names)
+	const string names[12] = {"white-pawn","white-rook","white-knight","white-bishop","white-queen","white-king","black-pawn","black-rook","black-knight","black-bishop","black-queen","black-king"};
+	sf::Texture textures[12];
+	for (int i = 0; i < 12; i++)
 	{
-		sf::Texture tex;
-
-		if (!tex.loadFromFile("pieces/" + name + ".png"))
-		{
-			cout << "ERROR: pieces/" << name << ".png not found!" << endl;
-			return -1;
-		}
-
-		textures[name] = move(tex);
+    	if (!textures[i].loadFromFile("pieces/" + names[i] + ".png"))
+    	{
+        	cout << "ERROR: pieces/" << names[i] << ".png not found!" << endl;
+        	return -1;
+    	}
 	}
 
 	// ── Sound ────────────────────────────────────────────────────
 
 	SoundManager sounds;
-
 	// ── Game state ───────────────────────────────────────────────
-
 	Board board;
 	int selRow = -1;
 	int selCol = -1;
@@ -65,17 +46,13 @@ int main()
 	bool gameOver = false;
 	string statusMsg = "White Player's Turn";
 	bool validMoves[8][8] = {};
-
 	cout << "Chess game started." << endl;
-
 	// ═══════════════════════════════════════════════════════════════
 	// GAME LOOP
 	// ═══════════════════════════════════════════════════════════════
-
 	while (window.isOpen())
 	{
 		// ── Events ───────────────────────────────────────────────
-
 		while (const auto event = window.pollEvent())
 		{
 			// Window close
@@ -83,7 +60,6 @@ int main()
 			{
 				window.close();
 			}
-
 			// ESC to close
 			if (const auto* key = event->getIf<sf::Event::KeyPressed>())
 			{
@@ -92,23 +68,19 @@ int main()
 					window.close();
 				}
 			}
-
 			if (!gameOver)
 			{
 				// ── Mouse click ──────────────────────────────────
-
 				if (const auto* mouse = event->getIf<sf::Event::MouseButtonPressed>())
 				{
 					int col = (mouse->position.x - OFFSET) / TILE;
 					int row = (mouse->position.y - OFFSET) / TILE;
-
 					if (col >= 0 && col < 8 && row >= 0 && row < 8)
 					{
 						if (!selected)
 						{
-							// Apni piece select karo
-							if (board.getGrid(row, col) &&
-								board.getGrid(row, col)->getColour() == board.getCurrentPlayer())
+							// Select Your Know Pieces
+							if (board.getGrid(row, col) &&board.getGrid(row, col)->getColour() == board.getCurrentPlayer())
 							{
 								selRow = row;
 								selCol = col;
@@ -126,9 +98,8 @@ int main()
 								selCol = -1;
 								memset(validMoves, 0, sizeof(validMoves));
 							}
-							// Dusri apni piece — reselect
-							else if (board.getGrid(row, col) &&
-								board.getGrid(row, col)->getColour() == board.getCurrentPlayer())
+							// Reselect Your Own Pieces
+							else if (board.getGrid(row, col) &&board.getGrid(row, col)->getColour() == board.getCurrentPlayer())
 							{
 								selRow = row;
 								selCol = col;
@@ -140,7 +111,6 @@ int main()
 								if (board.movePiece(selRow, selCol, row, col))
 								{
 									board.switchPlayer();
-
 									// Game over checks
 									if (!board.isKingAlive("W"))
 									{
@@ -168,9 +138,7 @@ int main()
 									}
 									else if (board.isCheckmate(board.getCurrentPlayer()))
 									{
-										statusMsg = (board.getCurrentPlayer() == "W")
-											? "BLACK WINS! CHECKMATE!"
-											: "WHITE WINS! CHECKMATE!";
+										statusMsg = (board.getCurrentPlayer() == "W")? "BLACK WINS! CHECKMATE!": "WHITE WINS! CHECKMATE!";
 										gameOver = true;
 										sounds.playGameover();
 									}
@@ -182,17 +150,12 @@ int main()
 									}
 									else if (board.isInCheck(board.getCurrentPlayer()))
 									{
-										statusMsg = (board.getCurrentPlayer() == "W")
-											? "WARNING! White King in CHECK!"
-											: "WARNING! Black King in CHECK!";
+										statusMsg = (board.getCurrentPlayer() == "W")? "WARNING! White King in CHECK!": "WARNING! Black King in CHECK!";
 										sounds.playCheck();
 									}
 									else
 									{
-										statusMsg = (board.getCurrentPlayer() == "W")
-											? "White Player's Turn"
-											: "Black Player's Turn";
-
+										statusMsg = (board.getCurrentPlayer() == "W")? "White Player's Turn": "Black Player's Turn";
 										if (board.wasCapture())
 										{
 											sounds.playCapture();
@@ -207,7 +170,6 @@ int main()
 								{
 									statusMsg = "Invalid Move! Try Again.";
 								}
-
 								selected = false;
 								selRow = -1;
 								selCol = -1;
@@ -216,26 +178,20 @@ int main()
 						}
 					}
 				}
-
 				// ── C key: Castling ──────────────────────────────
-
 				if (const auto* key = event->getIf<sf::Event::KeyPressed>())
 				{
 					if (key->code == sf::Keyboard::Key::C)
 					{
 						bool castled = board.castling(board.getCurrentPlayer(), "right");
-
 						if (!castled)
 						{
 							castled = board.castling(board.getCurrentPlayer(), "left");
 						}
-
 						if (castled)
 						{
 							board.switchPlayer();
-							statusMsg = (board.getCurrentPlayer() == "W")
-								? "White Player's Turn"
-								: "Black Player's Turn";
+							statusMsg = (board.getCurrentPlayer() == "W")? "White Player's Turn:" : "Black Player's Turn";
 							sounds.playCastle();
 						}
 						else
@@ -246,8 +202,8 @@ int main()
 				}
 			}
 		}
-
-		// ── Check highlight ke liye king position dhundo ─────────
+		
+		// ── Check Highlighted Kings Position For Castling ─────────
 
 		int kingRow = -1;
 		int kingCol = -1;
@@ -259,12 +215,9 @@ int main()
 		}
 
 		// ── Render ───────────────────────────────────────────────
-
 		window.clear(sf::Color(18, 18, 18));
 		window.draw(boardSprite);
-
 		drawHighlights(window, selRow, selCol, validMoves, inCheck, kingRow, kingCol);
-
 		for (int i = 0; i < 8; i++)
 		{
 			for (int j = 0; j < 8; j++)
@@ -275,15 +228,11 @@ int main()
 				}
 			}
 		}
-
-		drawSidePanel(window, font, board.getCurrentPlayer(),
-			statusMsg, board.getMoveCount(), gameOver);
-
+		drawSidePanel(window, font, board.getCurrentPlayer(),statusMsg, board.getMoveCount(), gameOver);
 		if (gameOver)
 		{
 			drawGameOverOverlay(window, font, statusMsg);
 		}
-
 		window.display();
 	}
 
