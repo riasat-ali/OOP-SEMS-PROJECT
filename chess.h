@@ -6,16 +6,15 @@
 #include <map>
 using namespace std;
 
-
+//CONSTANT VARIABLES
 extern const sf::Color HIGHLIGHT;
 extern const sf::Color CHECK_COLOR;
 extern const sf::Color VALID_MOVE_COLOR;
-
 extern const int TILE;
 extern const int OFFSET;
 extern const int PANEL_X;
 
-
+// SOUND MANAGER CLASS
 class SoundManager
 {
 private:
@@ -42,6 +41,7 @@ public:
 	void playCastle();
 };
 
+//PIECES ABSTRACT CLASS
 class pieces
 {
 protected:
@@ -59,8 +59,7 @@ public:
 
 	void setPosition(int r, int c);
 
-	virtual bool isValidMove(int toRow, int toCol, pieces* board[8][8],
-		int lastDRow = -1, int lastDCol = -1) = 0;
+	virtual bool isValidMove(int toRow, int toCol, pieces* board[8][8],int lastDRow = -1, int lastDCol = -1) = 0;
 	virtual string getSymbol() = 0;
 	virtual ~pieces() {}
 };
@@ -73,11 +72,8 @@ class Pawn : public pieces
 {
 public:
 	Pawn(string colour, int rows, int cols);
-
 	string getSymbol() override;
-
-	bool isValidMove(int toRow, int toCol, pieces* board[8][8],
-		int lastDRow = -1, int lastDCol = -1) override;
+	bool isValidMove(int toRow, int toCol, pieces* board[8][8],int lastDRow = -1, int lastDCol = -1) override;
 };
 
 // ═══════════════════════════════════════════════════════════════════
@@ -88,7 +84,6 @@ class Rook : public pieces
 {
 private:
 	bool hasMoved = false;
-
 public:
 	Rook(string colour, int rows, int cols);
 
@@ -97,8 +92,7 @@ public:
 	void setHasMoved();
 	bool getHasMoved() const;
 
-	bool isValidMove(int toRow, int toCol, pieces* board[8][8],
-		int lastDRow = -1, int lastDCol = -1) override;
+	bool isValidMove(int toRow, int toCol, pieces* board[8][8],int lastDRow = -1, int lastDCol = -1) override;
 };
 
 // ═══════════════════════════════════════════════════════════════════
@@ -109,11 +103,8 @@ class Knight : public pieces
 {
 public:
 	Knight(string colour, int rows, int cols);
-
 	string getSymbol() override;
-
-	bool isValidMove(int toRow, int toCol, pieces* board[8][8],
-		int lastDRow = -1, int lastDCol = -1) override;
+	bool isValidMove(int toRow, int toCol, pieces* board[8][8],int lastDRow = -1, int lastDCol = -1) override;
 };
 
 // ═══════════════════════════════════════════════════════════════════
@@ -123,12 +114,8 @@ public:
 class Bishop : public pieces
 {
 public:
-	Bishop(string colour, int rows, int cols);
-
-	string getSymbol() override;
-
-	bool isValidMove(int toRow, int toCol, pieces* board[8][8],
-		int lastDRow = -1, int lastDCol = -1) override;
+	Bishop(string colour, int rows, int cols);string getSymbol() override;
+	bool isValidMove(int toRow, int toCol, pieces* board[8][8],int lastDRow = -1, int lastDCol = -1) override;
 };
 
 // ═══════════════════════════════════════════════════════════════════
@@ -139,11 +126,8 @@ class Queen : public pieces
 {
 public:
 	Queen(string colour, int rows, int cols);
-
 	string getSymbol() override;
-
-	bool isValidMove(int toRow, int toCol, pieces* board[8][8],
-		int lastDRow = -1, int lastDCol = -1) override;
+	bool isValidMove(int toRow, int toCol, pieces* board[8][8], int lastDRow = -1, int lastDCol = -1) override;
 };
 
 // ═══════════════════════════════════════════════════════════════════
@@ -154,17 +138,12 @@ class King : public pieces
 {
 private:
 	bool hasMoved = false;
-
 public:
 	King(string colour, int rows, int cols);
-
 	string getSymbol() override;
-
 	void setHasMoved();
 	bool getHasMoved() const;
-
-	bool isValidMove(int toRow, int toCol, pieces* board[8][8],
-		int lastDRow = -1, int lastDCol = -1) override;
+	bool isValidMove(int toRow, int toCol, pieces* board[8][8],int lastDRow = -1, int lastDCol = -1) override;
 };
 
 // ═══════════════════════════════════════════════════════════════════
@@ -180,48 +159,36 @@ private:
 	int lastDoubleRow = -1;
 	int lastDoubleCol = -1;
 	bool lastMoveWasCapture = false;
-
 public:
 	Board();
 	~Board();
-
 	// Getters
 	pieces* getGrid(int r, int c) const;
 	string getCurrentPlayer() const;
 	int getMoveCount() const;
 	bool wasCapture() const;
-
 	// Setup
 	void setupPieces();
-
 	// Check simulation (move undo)
 	bool tryMoveAndCheck(pieces* piece, int fromRow, int fromCol, int toRow, int toCol);
-
-	// Move karo
+	// Moved
 	bool movePiece(int fromRow, int fromCol, int toRow, int toCol);
-
 	// Player switch
 	void switchPlayer();
-
 	// Check detection
 	bool isInCheck(string colour);
-
 	// Checkmate / Stalemate
 	bool isCheckmate(string colour);
 	bool isStalemate(string colour);
 	bool hasAnyLegalMove(string colour);
-
-	// Valid moves highlight ke liye
+	// Valid moves highlighted
 	void getValidMoves(int fromRow, int fromCol, bool validMoves[8][8]);
-
 	// Misc helpers
 	bool isKingAlive(string colour);
 	bool onlyKingsLeft();
-
 	// Castling
 	bool castling(string colour, string side);
-
-	// King position dhundo
+	// Finding King position 
 	void getKingPosition(string colour, int& kr, int& kc);
 };
 
@@ -229,17 +196,7 @@ public:
 // FREE DRAW FUNCTIONS
 // ═══════════════════════════════════════════════════════════════════
 
-void drawSidePanel(sf::RenderWindow& window, sf::Font& font,
-	const string& currentPlayer, const string& statusMsg,
-	int moveCount, bool gameOver);
-
-void drawGameOverOverlay(sf::RenderWindow& window, sf::Font& font,
-	const string& statusMsg);
-
-void drawHighlights(sf::RenderWindow& window,
-	int selRow, int selCol,
-	bool validMoves[8][8],
-	bool inCheck, int kingRow, int kingCol);
-
-void drawPiece(sf::RenderWindow& window, map<string, sf::Texture>& textures,
-	const string& symbol, int row, int col);
+void drawSidePanel(sf::RenderWindow& window, sf::Font& font,const string& currentPlayer, const string& statusMsg,int moveCount, bool gameOver);
+void drawGameOverOverlay(sf::RenderWindow& window, sf::Font& font,const string& statusMsg);
+void drawHighlights(sf::RenderWindow& window,int selRow, int selCol,bool validMoves[8][8],bool inCheck, int kingRow, int kingCol);
+void drawPiece(sf::RenderWindow& window, sf::Texture textures[12],const string& symbol, int row, int col)
