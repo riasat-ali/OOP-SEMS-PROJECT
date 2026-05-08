@@ -31,6 +31,7 @@ SoundManager::SoundManager()
 	gameoverSound = new sf::Sound(gameoverBuffer);
 	castleSound = new sf::Sound(castleBuffer);
 }
+
 SoundManager::~SoundManager()
 {
 	delete moveSound;
@@ -39,27 +40,31 @@ SoundManager::~SoundManager()
 	delete gameoverSound;
 	delete castleSound;
 }
-void SoundManager::playMove() 
+
+void SoundManager::playMove()
 {
 	if (moveSound)
 	{
 		moveSound->play();
-	} 
+	}
 }
-void SoundManager::playCapture() 
+
+void SoundManager::playCapture()
 {
 	if (captureSound)
 	{
 		captureSound->play();
 	}
 }
+
 void SoundManager::playCheck()
 {
-	if (checkSound) 
+	if (checkSound)
 	{
 		checkSound->play();
 	}
 }
+
 void SoundManager::playGameover()
 {
 	if (gameoverSound)
@@ -67,9 +72,10 @@ void SoundManager::playGameover()
 		gameoverSound->play();
 	}
 }
+
 void SoundManager::playCastle()
 {
-	if (castleSound) 
+	if (castleSound)
 	{
 		castleSound->play();
 	}
@@ -82,18 +88,22 @@ void SoundManager::playCastle()
 pieces::pieces() : colour(" "), rows(0), cols(0) {}
 
 pieces::pieces(string colour, int rows, int cols) : colour(colour), rows(rows), cols(cols) {}
-string pieces::getColour() const 
+
+string pieces::getColour() const
 {
-	return colour; 
+	return colour;
 }
-int pieces::getRow() const 
+
+int pieces::getRow() const
 {
-	return rows; 
+	return rows;
 }
-int pieces::getCol() const 
+
+int pieces::getCol() const
 {
-	return cols; 
+	return cols;
 }
+
 void pieces::setPosition(int r, int c)
 {
 	rows = r;
@@ -105,12 +115,13 @@ void pieces::setPosition(int r, int c)
 // ═══════════════════════════════════════════════════════════════════
 
 Pawn::Pawn(string colour, int rows, int cols) : pieces(colour, rows, cols) {}
+
 string Pawn::getSymbol()
 {
 	return (colour == "W") ? "P" : "p";
 }
-bool Pawn::isValidMove(int toRow, int toCol, pieces* board[8][8],
-	int lastDRow, int lastDCol)
+
+bool Pawn::isValidMove(int toRow, int toCol, pieces* board[8][8], int lastDRow, int lastDCol)
 {
 	int fromRow = rows;
 	int fromCol = cols;
@@ -122,30 +133,33 @@ bool Pawn::isValidMove(int toRow, int toCol, pieces* board[8][8],
 	{
 		return true;
 	}
-	// Moving Two Square Front (From Starting Position )
+
+	// Moving Two Square Front (From Starting Position)
 	if (toCol == fromCol && toRow == fromRow + 2 * dir)
 	{
-		bool onStartRank = (colour == "W" && fromRow == 6) ||(colour == "B" && fromRow == 1);
-		if (onStartRank &&board[fromRow + dir][fromCol] == nullptr &&board[toRow][toCol] == nullptr)
+		bool onStartRank = (colour == "W" && fromRow == 6) || (colour == "B" && fromRow == 1);
+		if (onStartRank && board[fromRow + dir][fromCol] == nullptr && board[toRow][toCol] == nullptr)
 		{
 			return true;
 		}
 	}
+
 	// Diagonal capture
-if (toRow == fromRow + dir && abs(toCol - fromCol) == 1)
-{
-	if (board[toRow][toCol] && board[toRow][toCol]->getColour() == enemy)
+	if (toRow == fromRow + dir && abs(toCol - fromCol) == 1)
 	{
-		return true;
-	}
-	if (lastDRow == fromRow && lastDCol == toCol)
-	{
-		if (board[fromRow][toCol] != nullptr &&dynamic_cast<Pawn*>(board[fromRow][toCol]) &&board[fromRow][toCol]->getColour() == enemy)
+		if (board[toRow][toCol] && board[toRow][toCol]->getColour() == enemy)
 		{
 			return true;
 		}
+		if (lastDRow == fromRow && lastDCol == toCol)
+		{
+			if (board[fromRow][toCol] != nullptr && dynamic_cast<Pawn*>(board[fromRow][toCol]) && board[fromRow][toCol]->getColour() == enemy)
+			{
+				return true;
+			}
+		}
 	}
-}
+
 	return false;
 }
 
@@ -154,27 +168,32 @@ if (toRow == fromRow + dir && abs(toCol - fromCol) == 1)
 // ═══════════════════════════════════════════════════════════════════
 
 Rook::Rook(string colour, int rows, int cols) : pieces(colour, rows, cols) {}
+
 string Rook::getSymbol()
 {
 	return (colour == "W") ? "R" : "r";
 }
 
-void Rook::setHasMoved() 
+void Rook::setHasMoved()
 {
 	hasMoved = true;
 }
+
 bool Rook::getHasMoved() const
 {
 	return hasMoved;
 }
-bool Rook::isValidMove(int toRow, int toCol, pieces* board[8][8],int lastDRow, int lastDCol)
+
+bool Rook::isValidMove(int toRow, int toCol, pieces* board[8][8], int lastDRow, int lastDCol)
 {
 	int fromRow = rows;
 	int fromCol = cols;
+
 	if (toRow != fromRow && toCol != fromCol)
 	{
 		return false;
 	}
+
 	if (toRow == fromRow)
 	{
 		int step = (toCol > fromCol) ? 1 : -1;
@@ -191,16 +210,18 @@ bool Rook::isValidMove(int toRow, int toCol, pieces* board[8][8],int lastDRow, i
 		int step = (toRow > fromRow) ? 1 : -1;
 		for (int i = fromRow + step; i != toRow; i += step)
 		{
-			if (board[i][fromCol]) 
+			if (board[i][fromCol])
 			{
 				return false;
 			}
 		}
 	}
+
 	if (board[toRow][toCol] && board[toRow][toCol]->getColour() == colour)
 	{
 		return false;
 	}
+
 	return true;
 }
 
@@ -209,23 +230,27 @@ bool Rook::isValidMove(int toRow, int toCol, pieces* board[8][8],int lastDRow, i
 // ═══════════════════════════════════════════════════════════════════
 
 Knight::Knight(string colour, int rows, int cols) : pieces(colour, rows, cols) {}
+
 string Knight::getSymbol()
 {
 	return (colour == "W") ? "N" : "n";
 }
 
-bool Knight::isValidMove(int toRow, int toCol, pieces* board[8][8],int lastDRow, int lastDCol)
+bool Knight::isValidMove(int toRow, int toCol, pieces* board[8][8], int lastDRow, int lastDCol)
 {
 	int rD = abs(toRow - rows);
 	int cD = abs(toCol - cols);
+
 	if (!((rD == 2 && cD == 1) || (rD == 1 && cD == 2)))
 	{
 		return false;
 	}
+
 	if (board[toRow][toCol] && board[toRow][toCol]->getColour() == colour)
 	{
 		return false;
 	}
+
 	return true;
 }
 
@@ -240,28 +265,33 @@ string Bishop::getSymbol()
 	return (colour == "W") ? "B" : "b";
 }
 
-bool Bishop::isValidMove(int toRow, int toCol, pieces* board[8][8],int lastDRow, int lastDCol)
+bool Bishop::isValidMove(int toRow, int toCol, pieces* board[8][8], int lastDRow, int lastDCol)
 {
 	int fromRow = rows;
 	int fromCol = cols;
+
 	if (abs(toRow - fromRow) != abs(toCol - fromCol))
 	{
 		return false;
 	}
+
 	int rStep = (toRow > fromRow) ? 1 : -1;
 	int cStep = (toCol > fromCol) ? 1 : -1;
 	int r = fromRow + rStep;
 	int c = fromCol + cStep;
+
 	while (r != toRow)
 	{
 		if (board[r][c]) { return false; }
 		r += rStep;
 		c += cStep;
 	}
+
 	if (board[toRow][toCol] && board[toRow][toCol]->getColour() == colour)
 	{
 		return false;
 	}
+
 	return true;
 }
 
@@ -276,45 +306,45 @@ string Queen::getSymbol()
 	return (colour == "W") ? "Q" : "q";
 }
 
-bool Queen::isValidMove(int toRow, int toCol, pieces* board[8][8],int lastDRow, int lastDCol)
+bool Queen::isValidMove(int toRow, int toCol, pieces* board[8][8], int lastDRow, int lastDCol)
 {
 	int fromRow = rows;
 	int fromCol = cols;
 	int rD = abs(toRow - fromRow);
 	int cD = abs(toCol - fromCol);
-if (toRow == fromRow || toCol == fromCol)
-{
-	if (toRow == fromRow)
-	{
-		int step = (toCol > fromCol) ? 1 : -1;
-		for (int j = fromCol + step; j != toCol; j += step)
-		{
-			if (board[fromRow][j]) 
-			{
-				return false; 
-			}
-		}
-	}
-	else
-	{
-		int step = (toRow > fromRow) ? 1 : -1;
-		for (int i = fromRow + step; i != toRow; i += step)
-		{
-			if (board[i][fromCol])
-			{
-				return false;
-			}
-		}
-	}
-}
 
-	// Bishop Movement (diagonal)
+	if (toRow == fromRow || toCol == fromCol)
+	{
+		if (toRow == fromRow)
+		{
+			int step = (toCol > fromCol) ? 1 : -1;
+			for (int j = fromCol + step; j != toCol; j += step)
+			{
+				if (board[fromRow][j])
+				{
+					return false;
+				}
+			}
+		}
+		else
+		{
+			int step = (toRow > fromRow) ? 1 : -1;
+			for (int i = fromRow + step; i != toRow; i += step)
+			{
+				if (board[i][fromCol])
+				{
+					return false;
+				}
+			}
+		}
+	}
 	else if (rD == cD)
 	{
 		int rStep = (toRow > fromRow) ? 1 : -1;
 		int cStep = (toCol > fromCol) ? 1 : -1;
 		int r = fromRow + rStep;
 		int c = fromCol + cStep;
+
 		while (r != toRow)
 		{
 			if (board[r][c]) { return false; }
@@ -326,10 +356,12 @@ if (toRow == fromRow || toCol == fromCol)
 	{
 		return false;
 	}
+
 	if (board[toRow][toCol] && board[toRow][toCol]->getColour() == colour)
 	{
 		return false;
 	}
+
 	return true;
 }
 
@@ -344,24 +376,28 @@ string King::getSymbol()
 	return (colour == "W") ? "K" : "k";
 }
 
-void King::setHasMoved() 
+void King::setHasMoved()
 {
-	hasMoved = true; 
+	hasMoved = true;
 }
+
 bool King::getHasMoved() const
 {
-	return hasMoved; 
+	return hasMoved;
 }
-bool King::isValidMove(int toRow, int toCol, pieces* board[8][8],int lastDRow, int lastDCol)
+
+bool King::isValidMove(int toRow, int toCol, pieces* board[8][8], int lastDRow, int lastDCol)
 {
 	if (abs(toRow - rows) > 1 || abs(toCol - cols) > 1)
 	{
 		return false;
 	}
+
 	if (board[toRow][toCol] && board[toRow][toCol]->getColour() == colour)
 	{
 		return false;
 	}
+
 	return true;
 }
 
@@ -378,7 +414,7 @@ Board::Board()
 			grid[i][j] = nullptr;
 		}
 	}
-		setupPieces();
+	setupPieces();
 }
 
 Board::~Board()
@@ -397,14 +433,17 @@ pieces* Board::getGrid(int r, int c) const
 {
 	return grid[r][c];
 }
+
 string Board::getCurrentPlayer() const
 {
 	return currentPlayer;
 }
+
 int Board::getMoveCount() const
 {
 	return moveCount;
 }
+
 bool Board::wasCapture() const
 {
 	return lastMoveWasCapture;
@@ -414,7 +453,6 @@ bool Board::wasCapture() const
 
 void Board::setupPieces()
 {
-	// Black back rank
 	grid[0][0] = new Rook("B", 0, 0);
 	grid[0][1] = new Knight("B", 0, 1);
 	grid[0][2] = new Bishop("B", 0, 2);
@@ -429,7 +467,6 @@ void Board::setupPieces()
 		grid[1][j] = new Pawn("B", 1, j);
 	}
 
-	// White back rank
 	grid[7][0] = new Rook("W", 7, 0);
 	grid[7][1] = new Knight("W", 7, 1);
 	grid[7][2] = new Bishop("W", 7, 2);
@@ -444,7 +481,6 @@ void Board::setupPieces()
 		grid[6][j] = new Pawn("W", 6, j);
 	}
 
-	// Middle squares empty
 	for (int i = 2; i <= 5; i++)
 	{
 		for (int j = 0; j < 8; j++)
@@ -462,7 +498,7 @@ bool Board::tryMoveAndCheck(pieces* piece, int fromRow, int fromCol, int toRow, 
 	pieces* epCaptured = nullptr;
 	int epRow = -1;
 	int epCol = -1;
-	// En passant: captured pawn is on another square
+
 	if (dynamic_cast<Pawn*>(piece) && toCol != fromCol && captured == nullptr)
 	{
 		epRow = fromRow;
@@ -471,17 +507,18 @@ bool Board::tryMoveAndCheck(pieces* piece, int fromRow, int fromCol, int toRow, 
 		grid[epRow][epCol] = nullptr;
 	}
 
-	// Move simulation
 	grid[toRow][toCol] = piece;
 	grid[fromRow][fromCol] = nullptr;
 	int oldR = piece->getRow();
 	int oldC = piece->getCol();
 	piece->setPosition(toRow, toCol);
+
 	bool inCheck = isInCheck(piece->getColour());
-	// Undo
+
 	grid[fromRow][fromCol] = piece;
 	grid[toRow][toCol] = captured;
 	piece->setPosition(oldR, oldC);
+
 	if (epCaptured)
 	{
 		grid[epRow][epCol] = epCaptured;
@@ -517,12 +554,9 @@ bool Board::movePiece(int fromRow, int fromCol, int toRow, int toCol)
 	}
 
 	bool isEnPassant = (dynamic_cast<Pawn*>(piece) && toCol != fromCol && grid[toRow][toCol] == nullptr);
-	
-	// Capture flag set  (For Sound)
-	
-lastMoveWasCapture = (grid[toRow][toCol] != nullptr) || isEnPassant;
 
-	// Move execution
+	lastMoveWasCapture = (grid[toRow][toCol] != nullptr) || isEnPassant;
+
 	pieces* captured = grid[toRow][toCol];
 	grid[toRow][toCol] = piece;
 	grid[fromRow][fromCol] = nullptr;
@@ -533,14 +567,11 @@ lastMoveWasCapture = (grid[toRow][toCol] != nullptr) || isEnPassant;
 		delete captured;
 	}
 
-	// En passant pawn removed
-	if (isEnPassant && grid[fromRow][toCol] &&dynamic_cast<Pawn*>(grid[fromRow][toCol]))
+	if (isEnPassant && grid[fromRow][toCol] && dynamic_cast<Pawn*>(grid[fromRow][toCol]))
 	{
 		delete grid[fromRow][toCol];
 		grid[fromRow][toCol] = nullptr;
 	}
-
-	// En passant tracker updated
 
 	if (dynamic_cast<Pawn*>(piece) && abs(toRow - fromRow) == 2)
 	{
@@ -552,7 +583,7 @@ lastMoveWasCapture = (grid[toRow][toCol] != nullptr) || isEnPassant;
 		lastDoubleRow = -1;
 		lastDoubleCol = -1;
 	}
-	
+
 	// Pawn promotion (auto queen)
 	if (dynamic_cast<Pawn*>(piece))
 	{
@@ -568,8 +599,7 @@ lastMoveWasCapture = (grid[toRow][toCol] != nullptr) || isEnPassant;
 		}
 	}
 
-}
- //hasMoved Flags Updated
+	// hasMoved flags updated
 	if (auto* rook = dynamic_cast<Rook*>(grid[toRow][toCol]))
 	{
 		rook->setHasMoved();
@@ -579,9 +609,11 @@ lastMoveWasCapture = (grid[toRow][toCol] != nullptr) || isEnPassant;
 	{
 		king->setHasMoved();
 	}
-moveCount++;
-return true;
+
+	moveCount++;
+	return true;
 }
+
 // ── Player switch ─────────────────────────────────────────────
 
 void Board::switchPlayer()
@@ -595,11 +627,12 @@ bool Board::isInCheck(string colour)
 {
 	int kingRow = -1;
 	int kingCol = -1;
+
 	for (int i = 0; i < 8 && kingRow == -1; i++)
 	{
 		for (int j = 0; j < 8; j++)
 		{
-			if (grid[i][j] &&grid[i][j]->getColour() == colour &&dynamic_cast<King*>(grid[i][j]))
+			if (grid[i][j] && grid[i][j]->getColour() == colour && dynamic_cast<King*>(grid[i][j]))
 			{
 				kingRow = i;
 				kingCol = j;
@@ -608,11 +641,13 @@ bool Board::isInCheck(string colour)
 		}
 	}
 
-	if (kingRow == -1) 
+	if (kingRow == -1)
 	{
 		return false;
 	}
+
 	string opp = (colour == "W") ? "B" : "W";
+
 	for (int i = 0; i < 8; i++)
 	{
 		for (int j = 0; j < 8; j++)
@@ -636,14 +671,14 @@ bool Board::isCheckmate(string colour)
 {
 	if (!isInCheck(colour))
 	{
-		return false; 
+		return false;
 	}
 	return !hasAnyLegalMove(colour);
 }
 
 bool Board::isStalemate(string colour)
 {
-	if (isInCheck(colour)) 
+	if (isInCheck(colour))
 	{
 		return false;
 	}
@@ -694,7 +729,9 @@ void Board::getValidMoves(int fromRow, int fromCol, bool validMoves[8][8])
 	{
 		return;
 	}
+
 	pieces* piece = grid[fromRow][fromCol];
+
 	for (int r = 0; r < 8; r++)
 	{
 		for (int c = 0; c < 8; c++)
@@ -718,7 +755,7 @@ bool Board::isKingAlive(string colour)
 	{
 		for (int j = 0; j < 8; j++)
 		{
-			if (grid[i][j] &&grid[i][j]->getColour() == colour &&dynamic_cast<King*>(grid[i][j]))
+			if (grid[i][j] && grid[i][j]->getColour() == colour && dynamic_cast<King*>(grid[i][j]))
 			{
 				return true;
 			}
@@ -740,6 +777,7 @@ bool Board::onlyKingsLeft()
 			}
 		}
 	}
+
 	return true;
 }
 
@@ -749,11 +787,13 @@ bool Board::castling(string colour, string side)
 {
 	int row = (colour == "W") ? 7 : 0;
 	King* king = dynamic_cast<King*>(grid[row][4]);
-	if (!king || king->getHasMoved()) 
+
+	if (!king || king->getHasMoved())
 	{
 		return false;
 	}
-	if (isInCheck(colour)) 
+
+	if (isInCheck(colour))
 	{
 		return false;
 	}
@@ -767,17 +807,15 @@ bool Board::castling(string colour, string side)
 		return false;
 	}
 
-	// Path must be empty
 	for (int c = 4 + step; c != rookCol; c += step)
 	{
 		if (grid[row][c]) { return false; }
 	}
 
-	// King's path must be free
 	for (int step2 = 1; step2 <= 2; step2++)
 	{
 		int col = 4 + step * step2;
-		if (col < 0 || col > 7) 
+		if (col < 0 || col > 7)
 		{
 			break;
 		}
@@ -786,26 +824,31 @@ bool Board::castling(string colour, string side)
 			return false;
 		}
 	}
-	// Castling executed
+
 	int kingDest = 4 + 2 * step;
 	int rookDest = 4 + step;
+
 	grid[row][4] = nullptr;
 	grid[row][kingDest] = king;
 	king->setPosition(row, kingDest);
 	king->setHasMoved();
+
 	grid[row][rookCol] = nullptr;
 	grid[row][rookDest] = rook;
 	rook->setPosition(row, rookDest);
 	rook->setHasMoved();
+
 	moveCount++;
 	return true;
 }
 
 // ── Find King's position ─────────────────────────────────────
+
 void Board::getKingPosition(string colour, int& kr, int& kc)
 {
 	kr = -1;
 	kc = -1;
+
 	for (int i = 0; i < 8; i++)
 	{
 		for (int j = 0; j < 8; j++)
@@ -819,20 +862,22 @@ void Board::getKingPosition(string colour, int& kr, int& kc)
 		}
 	}
 }
+
 // ═══════════════════════════════════════════════════════════════════
 // DRAW — SIDE PANEL
 // ═══════════════════════════════════════════════════════════════════
 
-void drawSidePanel(sf::RenderWindow& window, sf::Font& font,const string& currentPlayer, const string& statusMsg,int moveCount, bool gameOver)
+void drawSidePanel(sf::RenderWindow& window, sf::Font& font, const string& currentPlayer, const string& statusMsg, int moveCount, bool gameOver)
 {
-	// Panel background
 	sf::RectangleShape panel(sf::Vector2f(160, 680));
 	panel.setPosition(sf::Vector2f(PANEL_X - 10, OFFSET));
 	panel.setFillColor(sf::Color(20, 20, 20, 230));
 	panel.setOutlineColor(sf::Color(80, 80, 80));
 	panel.setOutlineThickness(1);
 	window.draw(panel);
+
 	int y = OFFSET + 15;
+
 	auto drawDivider = [&](int yPos)
 		{
 			sf::RectangleShape div(sf::Vector2f(140, 1));
@@ -840,16 +885,17 @@ void drawSidePanel(sf::RenderWindow& window, sf::Font& font,const string& curren
 			div.setFillColor(sf::Color(80, 80, 80));
 			window.draw(div);
 		};
-	// Title
+
 	sf::Text title(font, "CHESS", 22);
 	title.setFillColor(sf::Color(200, 180, 120));
 	title.setStyle(sf::Text::Bold);
 	title.setPosition(sf::Vector2f(PANEL_X + 18, y));
 	window.draw(title);
 	y += 35;
+
 	drawDivider(y);
 	y += 15;
-	// Turn indicator (Only When Game is active)
+
 	if (!gameOver)
 	{
 		sf::Text turnLabel(font, "TURN", 11);
@@ -858,14 +904,16 @@ void drawSidePanel(sf::RenderWindow& window, sf::Font& font,const string& curren
 		turnLabel.setPosition(sf::Vector2f(PANEL_X + 5, y));
 		window.draw(turnLabel);
 		y += 20;
+
 		sf::CircleShape circle(18);
-		circle.setFillColor((currentPlayer == "W")? sf::Color(240, 235, 220) : sf::Color(40, 40, 40));
+		circle.setFillColor((currentPlayer == "W") ? sf::Color(240, 235, 220) : sf::Color(40, 40, 40));
 		circle.setOutlineColor(sf::Color(200, 180, 120));
 		circle.setOutlineThickness(2);
 		circle.setPosition(sf::Vector2f(PANEL_X + 5, y));
 		window.draw(circle);
+
 		sf::Text playerName(font, (currentPlayer == "W") ? "WHITE" : "BLACK", 14);
-		playerName.setFillColor((currentPlayer == "W")? sf::Color(240, 235, 220) : sf::Color(160, 160, 160));
+		playerName.setFillColor((currentPlayer == "W") ? sf::Color(240, 235, 220) : sf::Color(160, 160, 160));
 		playerName.setStyle(sf::Text::Bold);
 		playerName.setPosition(sf::Vector2f(PANEL_X + 50, y + 8));
 		window.draw(playerName);
@@ -875,7 +923,6 @@ void drawSidePanel(sf::RenderWindow& window, sf::Font& font,const string& curren
 		y += 15;
 	}
 
-	// Move counter
 	sf::Text movesLabel(font, "MOVES", 11);
 	movesLabel.setFillColor(sf::Color(120, 120, 120));
 	movesLabel.setStyle(sf::Text::Bold);
@@ -893,7 +940,6 @@ void drawSidePanel(sf::RenderWindow& window, sf::Font& font,const string& curren
 	drawDivider(y);
 	y += 15;
 
-	// Status message
 	sf::Text statusLabel(font, "STATUS", 11);
 	statusLabel.setFillColor(sf::Color(120, 120, 120));
 	statusLabel.setStyle(sf::Text::Bold);
@@ -902,30 +948,32 @@ void drawSidePanel(sf::RenderWindow& window, sf::Font& font,const string& curren
 	y += 20;
 
 	sf::Color statusColor = sf::Color(180, 180, 180);
-	if (statusMsg.find("CHECK") != string::npos) 
+
+	if (statusMsg.find("CHECK") != string::npos)
 	{
 		statusColor = sf::Color(255, 100, 100);
 	}
-	else if (statusMsg.find("WINS") != string::npos) 
+	else if (statusMsg.find("WINS") != string::npos)
 	{
-		statusColor = sf::Color(100, 220, 100); 
+		statusColor = sf::Color(100, 220, 100);
 	}
-	else if (statusMsg.find("DRAW") != string::npos) 
+	else if (statusMsg.find("DRAW") != string::npos)
 	{
-		statusColor = sf::Color(255, 200, 50); 
+		statusColor = sf::Color(255, 200, 50);
 	}
 	else if (statusMsg.find("Invalid") != string::npos)
 	{
-		statusColor = sf::Color(255, 120, 80); 
+		statusColor = sf::Color(255, 120, 80);
 	}
 
-	// Word wrap
 	string line = "";
 	int lineLen = 0;
+
 	for (int i = 0; i < (int)statusMsg.size(); i++)
 	{
 		line += statusMsg[i];
 		lineLen++;
+
 		if (lineLen >= 14 && statusMsg[i] == ' ')
 		{
 			sf::Text st(font, line, 13);
@@ -937,6 +985,7 @@ void drawSidePanel(sf::RenderWindow& window, sf::Font& font,const string& curren
 			lineLen = 0;
 		}
 	}
+
 	if (!line.empty())
 	{
 		sf::Text st(font, line, 13);
@@ -949,7 +998,7 @@ void drawSidePanel(sf::RenderWindow& window, sf::Font& font,const string& curren
 	y += 10;
 	drawDivider(y);
 	y += 15;
-	// Hint
+
 	sf::Text hint(font, "Press C\nto castle", 11);
 	hint.setFillColor(sf::Color(90, 90, 90));
 	hint.setPosition(sf::Vector2f(PANEL_X + 5, y));
@@ -960,14 +1009,12 @@ void drawSidePanel(sf::RenderWindow& window, sf::Font& font,const string& curren
 // DRAW — GAME OVER OVERLAY
 // ═══════════════════════════════════════════════════════════════════
 
-void drawGameOverOverlay(sf::RenderWindow& window, sf::Font& font,const string& statusMsg)
+void drawGameOverOverlay(sf::RenderWindow& window, sf::Font& font, const string& statusMsg)
 {
-	// Dark overlay
 	sf::RectangleShape overlay(sf::Vector2f(800, 800));
 	overlay.setFillColor(sf::Color(0, 0, 0, 160));
 	window.draw(overlay);
 
-	// Box
 	sf::RectangleShape box(sf::Vector2f(400, 180));
 	box.setFillColor(sf::Color(15, 15, 15, 240));
 	box.setOutlineColor(sf::Color(200, 180, 120));
@@ -975,24 +1022,23 @@ void drawGameOverOverlay(sf::RenderWindow& window, sf::Font& font,const string& 
 	box.setPosition(sf::Vector2f(200, 290));
 	window.draw(box);
 
-	// Result text
 	string icon;
 	sf::Color iconColor;
 
-	if (statusMsg.find("WHITE WINS") != string::npos) 
+	if (statusMsg.find("WHITE WINS") != string::npos)
 	{
 		icon = "WHITE WINS";
 		iconColor = sf::Color(240, 235, 210);
 	}
 	else if (statusMsg.find("BLACK WINS") != string::npos)
 	{
-		icon = "BLACK WINS"; 
-		iconColor = sf::Color(160, 160, 160); 
+		icon = "BLACK WINS";
+		iconColor = sf::Color(160, 160, 160);
 	}
-	else 
+	else
 	{
 		icon = "DRAW";
-		iconColor = sf::Color(255, 200, 60); 
+		iconColor = sf::Color(255, 200, 60);
 	}
 
 	sf::Text bigText(font, icon, 38);
@@ -1019,9 +1065,8 @@ void drawGameOverOverlay(sf::RenderWindow& window, sf::Font& font,const string& 
 // DRAW — HIGHLIGHTS
 // ═══════════════════════════════════════════════════════════════════
 
-void drawHighlights(sf::RenderWindow& window,int selRow, int selCol,bool validMoves[8][8],bool inCheck, int kingRow, int kingCol)
+void drawHighlights(sf::RenderWindow& window, int selRow, int selCol, bool validMoves[8][8], bool inCheck, int kingRow, int kingCol)
 {
-	// Selected piece highlight
 	if (selRow != -1)
 	{
 		sf::RectangleShape sq(sf::Vector2f(80, 80));
@@ -1029,12 +1074,11 @@ void drawHighlights(sf::RenderWindow& window,int selRow, int selCol,bool validMo
 		sq.setFillColor(HIGHLIGHT);
 		window.draw(sq);
 
-		// Valid move dots
 		for (int r = 0; r < 8; r++)
 		{
 			for (int c = 0; c < 8; c++)
 			{
-				if (!validMoves[r][c]) 
+				if (!validMoves[r][c])
 				{
 					continue;
 				}
@@ -1051,7 +1095,6 @@ void drawHighlights(sf::RenderWindow& window,int selRow, int selCol,bool validMo
 		}
 	}
 
-	// King in check highlight
 	if (inCheck && kingRow != -1)
 	{
 		sf::RectangleShape sq(sf::Vector2f(80, 80));
@@ -1065,10 +1108,12 @@ void drawHighlights(sf::RenderWindow& window,int selRow, int selCol,bool validMo
 // DRAW — PIECE
 // ═══════════════════════════════════════════════════════════════════
 
-void drawPiece(sf::RenderWindow& window, sf::Texture textures[12],const string& symbol, int row, int col)
+void drawPiece(sf::RenderWindow& window, sf::Texture textures[12], const string& symbol, int row, int col)
 {
 	const string symbols[12] = { "P","R","N","B","Q","K","p","r","n","b","q","k" };
+
 	int idx = -1;
+
 	for (int i = 0; i < 12; i++)
 	{
 		if (symbols[i] == symbol)
@@ -1077,7 +1122,8 @@ void drawPiece(sf::RenderWindow& window, sf::Texture textures[12],const string& 
 			break;
 		}
 	}
-	if (idx == -1) 
+
+	if (idx == -1)
 	{
 		return;
 	}
