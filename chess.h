@@ -3,7 +3,6 @@
 #include <SFML/Audio.hpp>
 #include <iostream>
 #include <string>
-#include <map>
 using namespace std;
 
 //CONSTANT VARIABLES
@@ -199,4 +198,4 @@ public:
 void drawSidePanel(sf::RenderWindow& window, sf::Font& font,const string& currentPlayer, const string& statusMsg,int moveCount, bool gameOver);
 void drawGameOverOverlay(sf::RenderWindow& window, sf::Font& font,const string& statusMsg);
 void drawHighlights(sf::RenderWindow& window,int selRow, int selCol,bool validMoves[8][8],bool inCheck, int kingRow, int kingCol);
-void drawPiece(sf::RenderWindow& window, sf::Texture textures[12],const string& symbol, int row, int col)
+void drawPiece(sf::RenderWindow& window, sf::Texture textures[12],const string& symbol, int row, int col);
