@@ -103,7 +103,7 @@ When a pawn reaches the opposite end, it is automatically promoted to a **Queen*
 ---
 
 ### 5. Checkmate & Stalemate
-`Board::isStalemate(colour)` iterates all pieces of the given colour and tries every possible destination square (0–7, 0–7). If no valid move exists for any piece, it returns `true`.
+`Board::isStalemate(colour)` iterates all pieces of the given colour and tries every possible destination square (0–7, 0–7). If no valid move exists for any piece, it returns `true` and then FFAAHHHHHH.
 
 ---
 
