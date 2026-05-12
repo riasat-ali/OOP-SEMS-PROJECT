@@ -138,10 +138,11 @@ int main()
 									}
 									else if (board.isCheckmate(board.getCurrentPlayer()))
 									{
-										statusMsg = (board.getCurrentPlayer() == "W")? "BLACK WINS! CHECKMATE!": "WHITE WINS! CHECKMATE!";
-										gameOver = true;
-										sounds.playGameover();
+									statusMsg = (board.getCurrentPlayer() == "W") ? "BLACK WINS! CHECKMATE!" : "WHITE WINS! CHECKMATE!";
+									gameOver = true;
+									sounds.playGameover();  // ← change this
 									}
+									
 									else if (board.isStalemate(board.getCurrentPlayer()))
 									{
 										statusMsg = "DRAW! Stalemate!";
