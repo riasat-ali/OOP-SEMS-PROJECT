@@ -18,7 +18,7 @@ SoundManager::SoundManager()
 	bool ok = true;
 	ok &= moveBuffer.loadFromFile("sounds/move.ogg");
 	ok &= captureBuffer.loadFromFile("sounds/capture.ogg");
-	ok &= checkBuffer.loadFromFile("sounds/check.ogg");
+	ok &= checkBuffer.loadFromFile("sounds/fahhhhh ogg.ogg");
 	ok &= gameoverBuffer.loadFromFile("sounds/gameover.ogg");
 	ok &= castleBuffer.loadFromFile("sounds/castle.ogg");
 	if (!ok)
